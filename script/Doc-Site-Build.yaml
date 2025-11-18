@@ -1,0 +1,34 @@
+name: Doc-Site-Build
+description: This build configuration will build and publish the docs.
+settings:
+  disableCache: false
+  vcs-steps:
+  - key: vcs_git
+    name: GitHub
+    disabled: false
+    args:
+      authType: anonymous
+      branch: main
+      url: https://github.com/asheet23/Documentation-Website.git
+    argsProtected: {}
+  build-steps:
+  - key: runner_cmd
+    name: Build-Doc
+    disabled: false
+    workDir: ""
+    args:
+      commands: bash -c 'set -e; export DEBIAN_FRONTEND=noninteractive; rm -f /var/lib/dpkg/lock*
+        /var/cache/apt/archives/lock || true; while fuser /var/lib/dpkg/lock >/dev/null
+        2>&1 || fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 5; done;
+        apt-get clean; apt-get update -y; apt-get install -y curl ca-certificates
+        gnupg; curl -fsSL https://deb.nodesource.com/setup_20.x | bash -; apt-get
+        install -y nodejs; npm install -g npm@latest; node -v && npm -v; npm ci ||
+        npm install; npm run build; mkdir -p artifacts; cp -r build/* artifacts/;
+        echo "✅ Build completed successfully."'
+      continueOnError: false
+    argsProtected: {}
+  artifacts:
+  - name: Documentation-Website
+    condition: always
+    paths:
+    - artifacts/
