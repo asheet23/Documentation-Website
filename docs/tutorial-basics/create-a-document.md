@@ -37,6 +37,8 @@ sidebar_position: 3
 # Hello
 
 This is my **first Docusaurus document**!
+
+I need to create another document to learn more. (..)
 ```
 
 It is also possible to create your sidebar explicitly in `sidebars.js`:
